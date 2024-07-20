@@ -2,6 +2,7 @@ package de.greenman999.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.greenman999.LibrarianTradeFinder;
+import de.greenman999.config.TradeFinderConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.MultilineText;
 import net.minecraft.client.gui.DrawContext;
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.widget.EntryListWidget;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
@@ -25,8 +27,8 @@ public class EnchantmentsListWidget extends EntryListWidget<EnchantmentEntry> {
         super(client, width, height, top, itemHeight);
         this.top = top;
 
-        for(Enchantment enchantment : LibrarianTradeFinder.getConfig().enchantments.keySet()) {
-            this.addEntry(new EnchantmentEntry(enchantment));
+        for(TradeFinderConfig.EnchantmentOption options : LibrarianTradeFinder.getConfig().enchantments.values()) {
+            this.addEntry(new EnchantmentEntry(options.enchantment));
         }
 
         this.resetButton = GrayButtonWidget.builder(Text.translatable("tradefinderui.reset"), (buttonWidget) -> {
@@ -120,14 +122,9 @@ public class EnchantmentsListWidget extends EntryListWidget<EnchantmentEntry> {
         return this.width + 7;
     }
 
-    //@Override
-    /*protected int getScrollbarPositionX() {
-        return this.width - 10;
-    }*/
-
     @Override
     protected int getScrollbarX() {
-        return this.width;
+        return this.width - 1;
     }
 
     @Override

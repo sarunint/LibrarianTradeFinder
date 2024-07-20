@@ -22,7 +22,8 @@ import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.*;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 @Environment(net.fabricmc.api.EnvType.CLIENT)
 public class LibrarianTradeFinder implements ClientModInitializer {
@@ -62,24 +63,21 @@ public class LibrarianTradeFinder implements ClientModInitializer {
 						.then(literal("search").executes(context -> TradeFinder.searchList())
 							.then(argument("enchantment", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENCHANTMENT)).executes(context -> {
 								RegistryEntry<Enchantment> enchantmentRegistryEntry = context.getArgument("enchantment", RegistryEntry.class);
-								Enchantment enchantment = enchantmentRegistryEntry.value();
 
-								return TradeFinder.searchSingle(enchantment, 1, 64);
+								return TradeFinder.searchSingle(enchantmentRegistryEntry, 1, 64);
 							})
 								.then(argument("level", IntegerArgumentType.integer(1, 5)).executes(context -> {
 									RegistryEntry<Enchantment> enchantmentRegistryEntry = context.getArgument("enchantment", RegistryEntry.class);
-									Enchantment enchantment = enchantmentRegistryEntry.value();
 									int level = IntegerArgumentType.getInteger(context, "level");
 
-									return TradeFinder.searchSingle(enchantment, level, 64);
+									return TradeFinder.searchSingle(enchantmentRegistryEntry, level, 64);
 								})
 									.then(argument("maxPrice", IntegerArgumentType.integer(1, 64)).executes(context -> {
 										RegistryEntry<Enchantment> enchantmentRegistryEntry = context.getArgument("enchantment", RegistryEntry.class);
-										Enchantment enchantment = enchantmentRegistryEntry.value();
 										int level = IntegerArgumentType.getInteger(context, "level");
 										int bookPrice = IntegerArgumentType.getInteger(context, "maxPrice");
 
-										return TradeFinder.searchSingle(enchantment, level, bookPrice);
+										return TradeFinder.searchSingle(enchantmentRegistryEntry, level, bookPrice);
 									})))
 							)
 						)
