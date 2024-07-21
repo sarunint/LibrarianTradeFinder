@@ -10,6 +10,10 @@ base {
 	archivesName = project.archives_base_name + '-mc' + project.minecraft_version + '-' + project.loader
 }
 
+if (version == '0.0.0-PLACEHOLDER') {
+	version += "." + new Date().format('yyyyMMdd.HHmmss')
+}
+
 repositories {
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
