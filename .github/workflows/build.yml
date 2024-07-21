@@ -4,7 +4,12 @@
 # against bad commits.
 
 name: build
-on: [pull_request, push, workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
 
 jobs:
   build:
@@ -32,5 +37,6 @@ jobs:
           path: build/libs/
       - name: Publish
         uses: Kir-Antipov/mc-publish@v3.3
+        if: ${{ github.event.created && startsWith(github.ref, 'refs/tags/') }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
