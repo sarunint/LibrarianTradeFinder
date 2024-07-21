@@ -165,10 +165,6 @@ public class TradeFinderConfig {
         public int getMaxPrice() {
             return maxPrice;
         }
-
-        public String getName() {
-            return Enchantment.getName(enchantment, level).copy().formatted(Formatting.WHITE).getString();
-        }
     }
 
 }
