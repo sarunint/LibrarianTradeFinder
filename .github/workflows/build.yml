@@ -27,8 +27,9 @@ jobs:
           java-version: 21
           distribution: 'microsoft'
       - name: Replace version number in gradle.properties
+        if: ${{ github.event.created && startsWith(github.ref, 'refs/tags/') }}
         run: |
-          sed -i -e "s|0.0.0-PLACEHOLDER|$(echo "${{ github.ref }}" | sed -e "s|ref/tags/v||g" - | sed -e "s|/|-|g" -)|g" gradle.properties
+          sed -i -e "s|0.0.0-PLACEHOLDER|$(echo "${{ github.ref }}" | sed -e "s|ref/tags/v||g" -)|g" gradle.properties
           cat gradle.properties
       - name: Build
         run: ./gradlew build
