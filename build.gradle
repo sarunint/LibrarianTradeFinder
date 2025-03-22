@@ -3,10 +3,12 @@ plugins {
 	id 'maven-publish'
 }
 
-
-archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
 
 dependencies {
 	// To change the versions see the gradle.properties file
@@ -42,7 +44,7 @@ java {
 
 jar {
 	from("LICENSE") {
-		rename { "${it}_${archivesBaseName}"}
+		rename { "${it}_${project.base.archivesName.get()}"}
 	}
 }
 
