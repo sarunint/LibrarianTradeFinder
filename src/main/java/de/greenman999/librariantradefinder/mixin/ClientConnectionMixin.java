@@ -37,10 +37,12 @@ public class ClientConnectionMixin {
     private void onChannelRead0(ChannelHandlerContext channelHandlerContext, Packet<?> packet, CallbackInfo ci) {
         if(packet instanceof ClientboundOpenScreenPacket openScreenS2CPacket) {
             if(openScreenS2CPacket.getType() == MenuType.MERCHANT && !(TradeFinder.state.equals(TradeState.IDLE))) {
-                ClientPacketListener networkHandler = Minecraft.getInstance().getConnection();
-                if(networkHandler != null) {
-                    networkHandler.send(new ServerboundContainerClosePacket(openScreenS2CPacket.getContainerId()));
-                }
+                Minecraft.getInstance().execute(() -> {
+                    ClientPacketListener networkHandler = Minecraft.getInstance().getConnection();
+                    if(networkHandler != null) {
+                        networkHandler.send(new ServerboundContainerClosePacket(openScreenS2CPacket.getContainerId()));
+                    }
+                });
                 ci.cancel();
             }
         }else if(packet instanceof ClientboundMerchantOffersPacket setTradeOffersS2CPacket && TradeFinder.state.equals(TradeState.WAITING_FOR_PACKET)) {
@@ -82,17 +84,18 @@ public class ClientConnectionMixin {
         TradeFinder.stop();
         found.set(true);
 
-        Minecraft.getInstance().player.sendSystemMessage(
-                Component.translatable(
-                        "librarian-trade-finder.found",
-                        Enchantment.getFullname(Holder.direct(enchantment), level),
-                        tradeOffer.getBaseCostA().getCount(),
-                        Component.literal(String.valueOf(attempts))
-                                .withStyle(style -> style.withColor(0xcc1141))
-                ).withStyle(ChatFormatting.GREEN)
-        );
-
+        Minecraft.getInstance().execute(() -> {
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.sendSystemMessage(
+                        Component.translatable(
+                                "librarian-trade-finder.found",
+                                Enchantment.getFullname(Holder.direct(enchantment), level),
+                                tradeOffer.getBaseCostA().getCount(),
+                                Component.literal(String.valueOf(attempts))
+                                        .withStyle(style -> style.withColor(0xcc1141))
+                        ).withStyle(ChatFormatting.GREEN)
+                );
+            }
+        });
     }
-
-
 }
